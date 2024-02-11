@@ -1,15 +1,18 @@
-import { relations, sql } from "drizzle-orm";
+import { type AdapterAccount } from "@auth/core/adapters";
+import { type InferSelectModel, relations, sql } from "drizzle-orm";
 import {
-  bigint,
+  boolean,
+  datetime,
   index,
   int,
+  mysqlEnum,
   mysqlTableCreator,
   primaryKey,
   text,
   timestamp,
+  unique,
   varchar,
 } from "drizzle-orm/mysql-core";
-import { type AdapterAccount } from "next-auth/adapters";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -17,24 +20,7 @@ import { type AdapterAccount } from "next-auth/adapters";
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const mysqlTable = mysqlTableCreator((name) => `keycapcorner_${name}`);
-
-export const posts = mysqlTable(
-  "post",
-  {
-    id: bigint("id", { mode: "number" }).primaryKey().autoincrement(),
-    name: varchar("name", { length: 256 }),
-    createdById: varchar("createdById", { length: 255 }).notNull(),
-    createdAt: timestamp("created_at")
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updatedAt").onUpdateNow(),
-  },
-  (example) => ({
-    createdByIdIdx: index("createdById_idx").on(example.createdById),
-    nameIndex: index("name_idx").on(example.name),
-  })
-);
+export const mysqlTable = mysqlTableCreator((name) => `kcc_${name}`);
 
 export const users = mysqlTable("user", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
@@ -43,19 +29,25 @@ export const users = mysqlTable("user", {
   emailVerified: timestamp("emailVerified", {
     mode: "date",
     fsp: 3,
-  }).default(sql`CURRENT_TIMESTAMP(3)`),
+  }).defaultNow(),
+
   image: varchar("image", { length: 255 }),
+  password: varchar("password", { length: 255 }),
+  role: mysqlEnum("role", ["ADMIN", "USER"]).default("USER"),
+  isTwoFactorEnabled: boolean("isTwoFactorEnabled").default(false),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
-  sessions: many(sessions),
+  twoFactorConirmations: many(twoFactorConirmations),
 }));
 
 export const accounts = mysqlTable(
   "account",
   {
-    userId: varchar("userId", { length: 255 }).notNull(),
+    userId: varchar("userId", { length: 255 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
     type: varchar("type", { length: 255 })
       .$type<AdapterAccount["type"]>()
       .notNull(),
@@ -70,41 +62,72 @@ export const accounts = mysqlTable(
     session_state: varchar("session_state", { length: 255 }),
   },
   (account) => ({
-    compoundKey: primaryKey(account.provider, account.providerAccountId),
+    compoundKey: primaryKey({
+      columns: [account.provider, account.providerAccountId],
+    }),
+
     userIdIdx: index("userId_idx").on(account.userId),
-  })
+  }),
 );
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
   user: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
 
-export const sessions = mysqlTable(
-  "session",
-  {
-    sessionToken: varchar("sessionToken", { length: 255 })
-      .notNull()
-      .primaryKey(),
-    userId: varchar("userId", { length: 255 }).notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (session) => ({
-    userIdIdx: index("userId_idx").on(session.userId),
-  })
-);
-
-export const sessionsRelations = relations(sessions, ({ one }) => ({
-  user: one(users, { fields: [sessions.userId], references: [users.id] }),
-}));
-
 export const verificationTokens = mysqlTable(
   "verificationToken",
   {
-    identifier: varchar("identifier", { length: 255 }).notNull(),
-    token: varchar("token", { length: 255 }).notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
+    token: varchar("token", { length: 255 }).notNull().primaryKey(),
+    email: varchar("email", { length: 255 }).notNull(),
+    expires: datetime("expires", { mode: "date" }).notNull(),
   },
-  (vt) => ({
-    compoundKey: primaryKey(vt.identifier, vt.token),
-  })
+  (verificationToken) => ({
+    unique: unique().on(verificationToken.email, verificationToken.token),
+  }),
+);
+
+export const passwordResetTokens = mysqlTable(
+  "passwordResetToken",
+  {
+    token: varchar("token", { length: 255 }).notNull().primaryKey(),
+    email: varchar("email", { length: 255 }).notNull(),
+    expires: datetime("expires", { mode: "date" }).notNull(),
+  },
+  (passwordResetToken) => ({
+    passwordResetTokenUnique: unique("ss").on(
+      passwordResetToken.email,
+      passwordResetToken.token,
+    ),
+  }),
+);
+
+export const twoFactorTokens = mysqlTable(
+  "twoFactorToken",
+  {
+    token: varchar("token", { length: 255 }).notNull().primaryKey(),
+    email: varchar("email", { length: 255 }).notNull(),
+    expires: datetime("expires", { mode: "date" }).notNull(),
+  },
+  (twoFactorToken) => ({
+    twoFactorTokensUnique: unique().on(
+      twoFactorToken.email,
+      twoFactorToken.token,
+    ),
+  }),
+);
+export const twoFactorConirmations = mysqlTable("twoFactorConfirmation", {
+  id: varchar("id", { length: 255 }).notNull().primaryKey(),
+  userId: varchar("userId", { length: 255 })
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+});
+
+export const twoFactorConfirmationsRelations = relations(
+  twoFactorConirmations,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [twoFactorConirmations.userId],
+      references: [users.id],
+    }),
+  }),
 );

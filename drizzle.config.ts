@@ -8,5 +8,5 @@ export default {
   dbCredentials: {
     uri: env.DATABASE_URL,
   },
-  tablesFilter: ["keycapcorner_*"],
+  tablesFilter: ["kcc_*"],
 } satisfies Config;
