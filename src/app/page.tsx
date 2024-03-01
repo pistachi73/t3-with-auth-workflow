@@ -1,6 +1,3 @@
-import { AuthButton } from "@/components/auth/auth-button";
-import { Button } from "@/components/ui/button";
-
 export default async function Home() {
   return (
     <main className="flex h-full min-h-screen flex-col items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-blue-800">

@@ -1,4 +1,4 @@
-import { AlertCircle, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import * as React from "react";
 import { BsCheckCircle, BsCheckCircleFill } from "react-icons/bs";
 
@@ -71,8 +71,8 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
           </Button>
         </div>
         {withValidation && (
-          <div className="animate-password-input-div-down relative !mt-0 h-[100px]">
-            <div className="animate-password-input-p-down t op-0 absolute mt-2 flex flex-col space-y-1 opacity-0 fill-mode-forwards">
+          <div className="relative !mt-0 h-[100px] animate-password-input-div-down">
+            <div className="t op-0 absolute mt-2 flex animate-password-input-p-down flex-col space-y-1 opacity-0 fill-mode-forwards">
               {validations.map(({ message, id, valid }) => (
                 <p
                   key={id}

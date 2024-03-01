@@ -4,16 +4,11 @@ import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
-import { use } from "react";
-
-import { PageProps } from "../.next/types/app/auth/layout";
 
 import { users } from "./server/db/schema";
 
-import { env } from "@/env";
 import { LoginSchema } from "@/schemas";
 import { db } from "@/server/db";
-import { api } from "@/trpc/server";
 
 export default {
   providers: [
