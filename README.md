@@ -7,7 +7,7 @@ This app has the full auth workflow already implemented. It includes:
 - Login Form with email 2FA
 - Register Form with email verification
 - Reset Password workflow
-- Registe / Login with Google or GithubS
+- Registe / Login with Google or Github
 
 ## What's next? How do I make an app with this
 
