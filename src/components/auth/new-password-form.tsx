@@ -1,15 +1,15 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { TRPCClientError } from "@trpc/client";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type * as z from "zod";
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import { Button } from "../ui/button";
-import { FormError } from "../ui/form-error";
-import { FormSuccess } from "../ui/form-success";
 import { PasswordInput } from "../ui/password-input";
 
 import { FormWrapper } from "./form-wrapper";
@@ -39,7 +39,19 @@ export const NewPasswordForm = () => {
   const newPassword = api.auth.newPassword.useMutation();
 
   const onSubmit = async (values: z.infer<typeof NewPasswordSchema>) => {
-    newPassword.mutate({ token, values });
+    newPassword
+      .mutateAsync({ token, values })
+      .then(({ success }) => {
+        form.reset();
+        toast.success(success);
+      })
+      .catch((e) => {
+        if (e instanceof TRPCClientError) {
+          toast.error(e.message);
+        } else {
+          toast.error("Something went wrong");
+        }
+      });
   };
 
   return (
@@ -73,8 +85,6 @@ export const NewPasswordForm = () => {
             />
           </div>
 
-          <FormError message={newPassword.error?.message} />
-          <FormSuccess message={newPassword.data?.success} />
           <div className="space-y-3">
             <Button
               disabled={newPassword.isLoading}

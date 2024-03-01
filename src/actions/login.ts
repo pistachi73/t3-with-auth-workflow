@@ -7,13 +7,10 @@ import { type z } from "zod";
 import { redirect } from "next/navigation";
 
 import { signIn } from "@/auth";
-import { sendTwoFactorTokenEmail, sendVerificationEmail } from "@/lib/mail";
+import { sendTwoFactorTokenEmail } from "@/lib/mail";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { LoginSchema } from "@/schemas";
-import {
-  generateTwoFactorToken,
-  generateVerificationToken,
-} from "@/server/api/lib/tokens";
+import { generateTwoFactorToken } from "@/server/api/lib/tokens";
 import { getTwoFactorConirmationByUserId } from "@/server/api/lib/two-factor-confirmation";
 import { getTwoFactorTokenByEmail } from "@/server/api/lib/two-factor-token";
 import { getUserByEmail } from "@/server/api/lib/user";

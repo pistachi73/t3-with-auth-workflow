@@ -16,8 +16,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { FormError } from "@/components/ui/form-error";
-import { FormSuccess } from "@/components/ui/form-success";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -189,8 +187,6 @@ const SettingsPage = () => {
                 />
               )}
             </div>
-            <FormSuccess message={updateSettings.data?.success} />
-            <FormError message={updateSettings.error?.message} />
             <Button type="submit" disabled={updateSettings.isLoading}>
               Save
             </Button>

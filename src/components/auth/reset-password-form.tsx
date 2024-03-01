@@ -1,7 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { TRPCClientError } from "@trpc/client";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -13,8 +15,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { FormError } from "@/components/ui/form-error";
-import { FormSuccess } from "@/components/ui/form-success";
 import { Input } from "@/components/ui/input";
 import { ResetSchema } from "@/schemas";
 import { api } from "@/trpc/react";
@@ -30,7 +30,19 @@ export const ResetPasswordForm = () => {
   const reset = api.auth.reset.useMutation();
 
   const onSubmit = async (values: z.infer<typeof ResetSchema>) => {
-    reset.mutate(values);
+    reset
+      .mutateAsync(values)
+      .then(({ success }) => {
+        form.reset();
+        toast.success(success);
+      })
+      .catch((e) => {
+        if (e instanceof TRPCClientError) {
+          toast.error(e.message);
+        } else {
+          toast.error("Something went wrong");
+        }
+      });
   };
 
   return (
@@ -48,6 +60,7 @@ export const ResetPasswordForm = () => {
                     {...field}
                     placeholder="name@example.com"
                     disabled={reset.isLoading}
+                    autoFocus
                   />
                 </FormControl>
                 <FormMessage />
@@ -56,8 +69,6 @@ export const ResetPasswordForm = () => {
           />
         </div>
 
-        <FormError message={reset.error?.message} />
-        <FormSuccess message={reset.data?.success} />
         <Button disabled={reset.isLoading} type="submit" className="w-full">
           Send reset email
         </Button>

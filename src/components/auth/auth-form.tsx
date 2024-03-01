@@ -28,7 +28,7 @@ const AuthFormContent = () => {
     <div className="flex h-[100vh] w-full  flex-row overflow-hidden rounded-none border-none bg-white p-0 sm:h-[745px] sm:max-h-[90vh] sm:w-[475px] sm:rounded-md lg:w-[875px]">
       <div className="relative hidden min-h-full w-full basis-1/2 bg-red-100 bg-[url('https://source.unsplash.com/1600x900/?nature,water')] bg-cover lg:block">
         <div className="h-full bg-slate-900 bg-opacity-65 p-10">
-          {parentForm !== "new-password" && (
+          {parentForm !== "reset-password" && (
             <>
               <h3 className="py-6 text-3xl font-semibold tracking-tight text-white">
                 Add the title you
@@ -50,7 +50,7 @@ const AuthFormContent = () => {
       <div className="items flex min-h-full flex-col justify-between gap-6 overflow-scroll px-10 py-8 lg:basis-1/2">
         {parentForm === "login" && <LoginForm />}
         {parentForm === "register" && <RegisterForm />}
-        {parentForm === "new-password" && <NewPasswordForm />}
+        {parentForm === "reset-password" && <NewPasswordForm />}
         <p className="text-xs font-light leading-5 text-muted-foreground ">
           By joining, you agree to the Fiverr Terms of Service and to
           occasionally receive emails from us. Please read our Privacy Policy to

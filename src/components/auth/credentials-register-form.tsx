@@ -1,16 +1,11 @@
 "use client";
 
-import { cpSync } from "fs";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TRPCClientError } from "@trpc/client";
-import { TRPCError } from "@trpc/server";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type * as z from "zod";
-
-import { FormError } from "../ui/form-error";
 
 import { login } from "@/actions/login";
 import { useAuthContext } from "@/components/auth/auth-form-context";

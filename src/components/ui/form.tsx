@@ -1,6 +1,5 @@
 import type * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
-import { motion } from "framer-motion";
 import { AlertCircle } from "lucide-react";
 import * as React from "react";
 import {

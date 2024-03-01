@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import type * as z from "zod";
 
@@ -11,11 +11,8 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "../ui/form";
-import { FormError } from "../ui/form-error";
-import { FormSuccess } from "../ui/form-success";
 
 import { FormWrapper } from "./form-wrapper";
 
@@ -81,8 +78,6 @@ export const NewVerificationForm = () => {
             Resend code
           </Button>
 
-          <FormError message={newVerification.error?.message} />
-          <FormSuccess message={newVerification.data?.success} />
           <Button
             disabled={newVerification.isLoading}
             type="submit"

@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type * as z from "zod";
 
 import { useSearchParams } from "next/navigation";
@@ -44,7 +45,7 @@ export const CredentialsForm = () => {
     startTransition(async () => {
       const { twoFactor, success, error } = await login(values, callbackUrl);
       if (error) {
-        form.reset();
+        toast.error(error);
       }
 
       if (success) {
