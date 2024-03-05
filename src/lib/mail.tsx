@@ -1,9 +1,9 @@
 import { Resend } from "resend";
 
+import PasswordReset from "@/emails/password-reset";
+import TwoFactorVerification from "@/emails/two-factor-verification";
+import VerifyEmail from "@/emails/verify-email";
 import { getBaseUrl } from "@/trpc/shared";
-import PasswordReset from "@emails/password-reset";
-import TwoFactorVerification from "@emails/two-factor-verification";
-import VerifyEmail from "@emails/verify-email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const emailFrom = process.env.EMAIL_FROM || "onboarding@resend.dev";

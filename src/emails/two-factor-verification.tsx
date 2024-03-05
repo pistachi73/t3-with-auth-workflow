@@ -10,31 +10,30 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-import { Tailwind } from "../components/tailwind";
+import { Tailwind } from "./components/tailwind";
 
-interface VerifyEmailProps {
+interface TwoFactorVerificationProps {
   token: string;
 }
 
-export default function VerifyEmail({ token = "596853" }: VerifyEmailProps) {
+export default function TwoFactorVerification({
+  token = "596853",
+}: TwoFactorVerificationProps) {
   return (
     <Html>
       <Head />
-      <Preview>Email Verification</Preview>
+      <Preview>2FA Verification Code</Preview>
       <Tailwind>
         <Body className="m-0 bg-white font-sans">
           <Container className="m-x-auto m-y-0 p-5">
             <Section className="rounded-md bg-gray-200 p-8">
               <Section className="flex flex-col items-center rounded-md bg-white p-6">
-                <Text className="m-0 font-medium text-gray-400">
-                  YOUR&apos;RE ONE STEP AWAY
-                </Text>
                 <Heading className="m-0 text-3xl font-bold">
-                  Verify your email address
+                  2FA Verification Code
                 </Heading>
                 <Text className="mt-2">
-                  To complete your registration, please enter the following
-                  verification code in the registration form.
+                  To complete your login, please enter the following
+                  verification code.
                 </Text>
 
                 <Section className="my-10 flex w-full items-center justify-center">

@@ -5,9 +5,11 @@ import { usePathname } from "next/navigation";
 
 import { UserButton } from "@/components/auth/user-button";
 import { Button } from "@/components/ui/button";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 export const Navbar = () => {
   const pathname = usePathname();
+  const user = useCurrentUser();
   return (
     <nav className="flex w-[600px] items-center justify-between rounded-xl bg-secondary p-4 shadow-sm ">
       <div className="flex gap-x-2">
@@ -17,12 +19,7 @@ export const Navbar = () => {
         >
           <Link href="/server">Server</Link>
         </Button>
-        <Button
-          asChild
-          variant={pathname === "/client" ? "default" : "outline"}
-        >
-          <Link href="/client">Client</Link>
-        </Button>
+
         <Button asChild variant={pathname === "/admin" ? "default" : "outline"}>
           <Link href="/admin">Admin</Link>
         </Button>
@@ -33,7 +30,7 @@ export const Navbar = () => {
           <Link href="/settings">Settings</Link>
         </Button>
       </div>
-      <UserButton />
+      <UserButton user={user} />
     </nav>
   );
 };

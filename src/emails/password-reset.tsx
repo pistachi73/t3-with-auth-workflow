@@ -11,7 +11,7 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-import { Tailwind } from "../components/tailwind";
+import { Tailwind } from "./components/tailwind";
 
 interface PasswordResetProps {
   resetLink: string;
