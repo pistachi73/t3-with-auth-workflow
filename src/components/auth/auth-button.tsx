@@ -1,43 +1,34 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+import { Slot } from "@radix-ui/react-slot";
 import { useRouter } from "next/navigation";
-
-import { AuthForm } from "@/components/auth/auth-form";
-import { type AuthFormType } from "@/components/auth/auth.types";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 type LoginButtonProps = {
   children: React.ReactNode;
-  formType: AuthFormType;
-  mode?: "modal" | "redirect";
+  callbackUrl?: string;
   asChild?: boolean;
+  className?: string;
 };
 
 export const AuthButton = ({
-  formType,
   children,
+  callbackUrl,
   asChild,
-  mode,
+  className,
 }: LoginButtonProps) => {
   const router = useRouter();
 
   const onClick = () => {
-    router.push(`/auth/${formType || "login"}`);
+    const href = `/login/${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`;
+    router.push(href);
   };
 
-  if (mode === "modal") {
-    return (
-      <Dialog>
-        <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
-        <DialogContent className="h-full w-full max-w-max border-none p-0 sm:h-auto sm:w-auto">
-          <AuthForm initialFormType="register" />
-        </DialogContent>
-      </Dialog>
-    );
-  }
+  const Comp = asChild ? Slot : "button";
+
   return (
-    <span onClick={onClick} className="cursor-pointer">
+    <Comp onClick={onClick} className={cn(className)}>
       {children}
-    </span>
+    </Comp>
   );
 };

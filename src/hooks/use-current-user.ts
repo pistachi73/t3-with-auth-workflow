@@ -1,8 +1,10 @@
+import type { ExtendedUser } from "@/types/next-auth";
 import { useSession } from "next-auth/react";
-
-import { type ExtendedUser } from "@/next-auth";
+import { useMemo } from "react";
 
 export const useCurrentUser = () => {
   const session = useSession();
-  return session.data?.user as ExtendedUser;
+  const user = useMemo(() => session.data?.user as ExtendedUser, [session]);
+
+  return user;
 };

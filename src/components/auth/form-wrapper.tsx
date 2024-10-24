@@ -1,4 +1,4 @@
-import { BsArrowLeft } from "react-icons/bs";
+import { ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -8,6 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { m } from "framer-motion";
+import { useEffect } from "react";
+import { useAuthContext } from "./auth-context";
+
+const MotionCard = m(Card);
 
 type FormWrapperProps = {
   children: React.ReactNode;
@@ -15,6 +21,7 @@ type FormWrapperProps = {
   subHeader?: string | React.ReactNode;
   backButton?: boolean;
   backButtonOnClick?: () => void;
+  className?: string;
 };
 
 export const FormWrapper = ({
@@ -23,29 +30,60 @@ export const FormWrapper = ({
   subHeader,
   backButton,
   backButtonOnClick,
+  className,
 }: FormWrapperProps) => {
+  const { animationDir, setAnimationDir } = useAuthContext();
+
+  useEffect(() => {
+    setAnimationDir(1);
+  }, [setAnimationDir]);
+
   return (
-    <Card className="w-full border-none bg-transparent shadow-none">
+    <MotionCard
+      className="w-full border-none bg-transparent shadow-none"
+      initial={{ opacity: 0, x: animationDir === 1 ? 20 : -20 }}
+      animate={{
+        opacity: 1,
+        x: 0,
+      }}
+      exit={{
+        opacity: 0,
+        x: animationDir === 1 ? -20 : 20,
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 35,
+      }}
+    >
       <div className="min-h-[20px]">
         {backButton && (
           <Button
-            onClick={backButtonOnClick}
+            onClick={async () => {
+              await setAnimationDir(-1);
+              backButtonOnClick?.();
+            }}
             size="inline"
             variant="link"
+            type="button"
             className="text-sm text-muted-foreground hover:no-underline"
           >
-            <BsArrowLeft size={18} className="mr-2" />
+            <ArrowLeft size={18} className="mr-2" />
             Back
           </Button>
         )}
       </div>
       <CardHeader className="px-0 py-6">
-        <CardTitle className="text-3xl sm:text-2xl">{header}</CardTitle>
-        <CardDescription className="mt-2 text-lg font-light sm:text-base">
+        <CardTitle className="text-2xl font-semibold tracking-tighter ">
+          {header}
+        </CardTitle>
+        <CardDescription className="mt-2 text-base">
           {subHeader}
         </CardDescription>
       </CardHeader>
-      <CardContent className="px-0 py-4">{children}</CardContent>
-    </Card>
+      <CardContent className={cn("px-0 py-4", className)}>
+        {children}
+      </CardContent>
+    </MotionCard>
   );
 };

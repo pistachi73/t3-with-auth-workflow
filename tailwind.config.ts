@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["var(--font-inter)"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -129,6 +132,9 @@ const config = {
           "password-input-p-down 200ms ease 200ms 1 normal none running",
       },
     },
+  },
+  future: {
+    hoverOnlyWhenSupported: true,
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;

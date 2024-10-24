@@ -1,44 +1,39 @@
 import "@/styles/globals.css";
 
+import { auth } from "@/auth-config";
+import { DeviceOnlyProvider } from "@/components/device-only/device-only-provider";
+import { Providers } from "@/components/providers";
+import { getHeaders } from "@/utils/get-headers";
 import { SessionProvider } from "next-auth/react";
-
-import { Inter } from "next/font/google";
-import { cookies } from "next/headers";
-
-import { auth } from "@/auth";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
-import { Toaster } from "@/components/ui/sonner";
-import { TRPCReactProvider } from "@/trpc/react";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
+import { inter } from "./fonts";
 
 export const metadata = {
-  title: "KeycapCorner",
-  description: "KeycapCorner marketplace",
+  title: "Title",
+  description: "Description",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
 export default async function RootLayout({
   children,
+  auth: authModal,
 }: {
   children: React.ReactNode;
+  auth: React.ReactNode;
 }) {
   const session = await auth();
+  const { deviceType } = getHeaders();
+
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable} min-h-screen`}>
-        <TRPCReactProvider cookies={cookies().toString()}>
+        <Providers>
           <SessionProvider session={session}>
-            <Toaster />
-            <Header />
-            {children}
-            <Footer />
+            <DeviceOnlyProvider deviceType={deviceType}>
+              {children}
+              {authModal}
+            </DeviceOnlyProvider>
           </SessionProvider>
-        </TRPCReactProvider>
+        </Providers>
       </body>
     </html>
   );

@@ -1,19 +1,15 @@
 "use client";
 
-import { logout } from "@/actions/logout";
+import { Slot } from "@radix-ui/react-slot";
+import { signOut } from "next-auth/react";
 
 type LogoutButtonProps = {
-  children?: React.ReactNode;
+  children: React.ReactNode;
+  asChild?: boolean;
 };
 
-export const LogoutButton = ({ children }: LogoutButtonProps) => {
-  const onClick = () => {
-    logout();
-  };
+export const LogoutButton = ({ children, asChild }: LogoutButtonProps) => {
+  const Comp = asChild ? Slot : "button";
 
-  return (
-    <span onClick={onClick} className="cursor-pointer">
-      {children}
-    </span>
-  );
+  return <Comp onClick={() => signOut({ redirectTo: "/" })}>{children}</Comp>;
 };

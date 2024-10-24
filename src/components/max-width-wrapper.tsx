@@ -1,22 +1,24 @@
-import { type ReactNode } from "react";
+import { type ReactNode, forwardRef } from "react";
 
 import { cn } from "@/lib/utils";
 
-export const MaxWidthWrapper = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: ReactNode;
-}) => {
+export const MaxWidthWrapper = forwardRef<
+  HTMLDivElement,
+  {
+    children: ReactNode;
+    className?: string;
+    as?: string;
+  }
+>(({ className, children, as = "div" }, ref) => {
+  const Component = as as any;
   return (
-    <div
-      className={cn(
-        "mx-auto w-full max-w-screen-xl px-2.5 md:px-20",
-        className,
-      )}
+    <Component
+      ref={ref}
+      className={cn("mx-auto w-full px-2.5 md:px-20", className)}
     >
       {children}
-    </div>
+    </Component>
   );
-};
+});
+
+MaxWidthWrapper.displayName = "MaxWidthWrapper";

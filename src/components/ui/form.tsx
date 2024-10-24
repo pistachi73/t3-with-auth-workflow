@@ -147,14 +147,16 @@ const FormMessage = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
-  const { error, formMessageId } = useFormField();
+  const { error, formMessageId, name } = useFormField();
   const body = error ? String(error?.message) : children;
+
+  if (error?.type === "informative") {
+    return null;
+  }
 
   if (!body) {
     return null;
   }
-
-  console.log({ error });
 
   return (
     <div className="relative !mt-0 h-[25px] animate-form-message-div-down">
@@ -176,12 +178,12 @@ const FormMessage = React.forwardRef<
 FormMessage.displayName = "FormMessage";
 
 export {
-  useFormField,
   Form,
-  FormItem,
-  FormLabel,
   FormControl,
   FormDescription,
-  FormMessage,
   FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  useFormField,
 };

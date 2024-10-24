@@ -4,9 +4,9 @@ import { BsCheckCircle, BsCheckCircleFill } from "react-icons/bs";
 
 import { Input } from "./input";
 
+import { passwordRegex } from "@/components/auth/validation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { passwordRegex } from "@/schemas";
 
 export type PasswordInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   withValidation?: boolean;

@@ -19,7 +19,7 @@ const CodeInput = React.forwardRef<HTMLInputElement, CodeInputProps>(
         const value = event.currentTarget.value;
         const next = inputRefs.current[idx + 1];
 
-        if (value.length > 1 || isNaN(Number(value))) {
+        if (value.length > 1 || Number.isNaN(Number(value))) {
           return;
         }
 

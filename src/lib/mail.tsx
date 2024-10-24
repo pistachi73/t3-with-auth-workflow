@@ -1,12 +1,13 @@
+"use server";
 import { Resend } from "resend";
 
 import PasswordReset from "@/emails/password-reset";
 import TwoFactorVerification from "@/emails/two-factor-verification";
 import VerifyEmail from "@/emails/verify-email";
-import { getBaseUrl } from "@/trpc/shared";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-const emailFrom = process.env.EMAIL_FROM || "onboarding@resend.dev";
+import { env } from "@/env";
+import { getUrl } from "@/utils/get-url";
+const resend = new Resend(env.RESEND_API_KEY);
+const emailFrom = env.EMAIL_FROM || "onboarding@resend.dev";
 
 export const sendVerificationEmail = async ({
   email,
@@ -30,7 +31,7 @@ export const sendPasswordResetEmail = async ({
   email: string;
   token: string;
 }) => {
-  const resetLink = `${getBaseUrl()}/auth/reset-password?token=${token}`;
+  const resetLink = getUrl(`/reset-password?token=${token}`);
   await resend.emails.send({
     from: emailFrom,
     to: email,
